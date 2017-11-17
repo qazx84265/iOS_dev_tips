@@ -5,22 +5,27 @@
 - (void)gcdTimer {
  
     // get the queue
-    dispatch_queue_t queue = dispatch_get_global_queue(0, 0);
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
      
-    // creat timer
+    // create timer as source
     self.timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
     // config the timer (starting time，interval)
-    // set begining time
+    // set beginning time
     dispatch_time_t start = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC));
     // set the interval
-    uint64_t interver = (uint64_t)(1.0 * NSEC_PER_SEC);
-     
-    dispatch_source_set_timer(self.timer, start, interver, 0.0);
+    uint64_t interval = (uint64_t)(1.0 * NSEC_PER_SEC);
+    // set the precision
+    uint64_t precision = (uint64_t)(0.1 * NSEC_PER_SEC);
+    
+    dispatch_source_set_timer(self.timer, start, interval, precision);
      
     dispatch_source_set_event_handler(self.timer, ^{
-        // the tarsk needed to be processed async
+        // the task needed to be processed async
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
             NSLog(@"gcdTimer");
+            
+            // cancel timer
+            dispatch_source_cancel(self.timer);
         });
     });
      
