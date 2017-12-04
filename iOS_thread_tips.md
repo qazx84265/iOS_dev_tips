@@ -29,6 +29,7 @@
         });
     });
      
+     // active timer
     dispatch_resume(self.timer);
 }
 ```
@@ -39,7 +40,9 @@
 
 ```    
 - (void)test {
-    dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    
+        // selector will not be invoked
         [self performSelector:@selector(test1) withObject:nil afterDelay:1];
         
         // 解决方法1，开启子线程的runloop
